@@ -2,6 +2,7 @@
 <html>
 
 <head>
+	 <link rel="stylesheet" href="../assets/bootstrap-4.0.0-dist/css/bootstrap.min.css">
 	<title>Image Processing</title>
 	<style type="text/css">
 		body {
@@ -19,7 +20,8 @@
 		.image-before,
 		.image-after {
 			float: left;
-			margin: 0 30px;
+			margin-left: 150px;
+			margin-top : 30px;
 			text-align: center;
 		}
 
@@ -38,6 +40,8 @@
 			font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 			background-color: #e74c3c;
 			color: #ecf0f1;
+			height: 80px;
+			padding-top : 15px;
 		}
 
 		.header h1 {
@@ -79,7 +83,8 @@
 		}
 
 		.card {
-			margin: 15px 5px;
+			margin-top: 5px;
+			margin-left: 400px;
 		}
 
 		input[type="range"] {
@@ -101,20 +106,20 @@
 
 </head>
 
-<body>
+<body style="background-color:powderblue;">
 	<!-- Start Container -->
-	<div class="container">
+	<div class="container" style="background-color:white;">
 		<div class="header">
 			<h1>TUGAS UAS PENGOLAHAN CITRA</h1>
 		</div>
-		<div class="image-preview">
+		<div class="image-preview" align="center">
 			<!-- Start Image Before -->
 			<div class="image-before">
 				<h3>Gambar sebelum </h3>
 				<canvas class="canvas-box" id="canvas-image-before"></canvas>
 				<br>
-				<label for="upload-file">Upload Gambar</label>
-				<input type="file" id="upload-file" placeholder="Upload a Picture" />
+				<label for="upload-file" class="form-label">Upload Gambar</label>
+				<input type="file" id="upload-file" class="form-control" placeholder="Upload a Picture" />
 			</div>
 			<!-- End Image Before -->
 
@@ -122,20 +127,20 @@
 			<div class="image-after">
 				<h3>Gambar Sesudah</h3>
 				<canvas class="canvas-box" id="canvas-image-after"></canvas><br />
-				<button id="download-btn">Download Gambar</button>
+				<button type="button" class="btn btn-success" id="download-btn">Download Gambar</button>
 			</div>
 			<!-- End Image After -->
 		</div>
 		<!-- Start Button Process -->
 		<div class="button-process">
 			<div class="btn-effect">
-				<button id="reset-btn">Reset Gambar</button>
-				<button id="invert-btn">Negative</button>
-				<button id="greyscale-btn">Greyscale</button>
-				<button id="threshold-btn">Threshold</button>
+				<button id="reset-btn" type="button" class="btn btn-danger">Reset Gambar</button>
+				<button id="invert-btn" type="button" class="btn btn-primary">Negative</button>
+				<button id="greyscale-btn" type="button" class="btn btn-primary">Greyscale</button>
+				<button id="threshold-btn" type="button" class="btn btn-primary">Threshold</button>
 				<input type="range" id="value-threshold" name="value-threshold" value="0" min="0" max="255" />
-				<button id="rotate-cw-90-btn">Rotate 90&deg;</button>
-				<button id="rotate-ccw-90-btn">Rotate -90&deg;</button>
+				<button id="rotate-cw-90-btn" type="button" class="btn btn-primary">Rotate 90&deg;</button>
+				<button id="rotate-ccw-90-btn" type="button" class="btn btn-primary">Rotate -90&deg;</button>
 			</div>
 			<div class="range-effect">
 				<label for="brightness">Brightness</label>
@@ -173,9 +178,7 @@
 		</div>
 		<!-- End Button Process -->
 		<footer>
-			<p><strong>Ricky Agung</strong> | <strong>Muhamad Yusup Efendi</strong> | <strong>Ika Maria</strong>
-				| <strong>Anas Tasia</strong>
-			</p>
+			<p><strong>Ricky Agung</strong> | <strong>Muhamad Yusup Efendi</strong> | <strong>Ika Maria</strong> | <strong>Anas Tasia</strong></p>
 		</footer>
 	</div>
 	<!-- End Container -->
@@ -189,9 +192,9 @@
 	var ctx_after = canvas_after.getContext('2d');
 	var fileName = '';
 
-	$(document).ready(function () {
+	$(document).ready(function() {
 		// Upload file
-		$('#upload-file').on('change', function () {
+		$('#upload-file').on('change', function() {
 			var file = document.querySelector('#upload-file').files[0];
 			var reader = new FileReader();
 
@@ -200,11 +203,11 @@
 				reader.readAsDataURL(file);
 			}
 
-			// Menerapkan gambar di kanvas sebelum dan sesudah di edit
-			reader.addEventListener('load', function () {
+			// Put image on canvas before and after
+			reader.addEventListener('load', function() {
 				img = new Image();
 				img.src = reader.result;
-				img.onload = function () {
+				img.onload = function() {
 					//canvas before
 					canvas_before.width = img.width;
 					canvas_before.height = img.height;
@@ -220,8 +223,7 @@
 			});
 		});
 
-		// Function Download
-		$("#download-btn").on("click", function (e) {
+		$("#download-btn").on("click", function(e) {
 			var fileExtension = fileName.slice(-4);
 			if (fileExtension == ".jpg" || fileExtension == ".png") {
 				var actualName = fileName.substring(0, fileName.length - 4);
@@ -229,56 +231,56 @@
 			download(canvas_after, actualName + "-edited.jpg");
 		});
 
-		//Reset Gambar
-		$('#reset-btn').on('click', function (e) {
+		//Reset Processing
+		$('#reset-btn').on('click', function(e) {
 			$('input[type=range]').val(0);
 			$('input[type=number]').val(0);
 			document.getElementById('value-contrast').innerHTML = 0;
 			document.getElementById('value-brightness').innerHTML = 0;
 			document.getElementById('value-blur').innerHTML = 0;
 			document.getElementById('value-sharpen').innerHTML = 0;
-			Caman('#canvas-image-after', function () {
+			Caman('#canvas-image-after', function() {
 				this.revert(false);
 				this.render();
 			});
 		});
 
-		//Gambar Negative 
-		$('#invert-btn').on('click', function (e) {
-			Caman('#canvas-image-after', function () {
+		//Negative Processing
+		$('#invert-btn').on('click', function(e) {
+			Caman('#canvas-image-after', function() {
 				this.revert(false);
 				this.invert().render();
 			});
 		});
 
 		//Grayscale Processing
-		$('#greyscale-btn').on('click', function (e) {
-			Caman('#canvas-image-after', function () {
+		$('#greyscale-btn').on('click', function(e) {
+			Caman('#canvas-image-after', function() {
 				this.revert(false);
 				this.greyscale().render();
 			});
 		});
 
 		//Threshold Processing
-		$('#threshold-btn').on('click', function (e) {
+		$('#threshold-btn').on('click', function(e) {
 			var threshold_value = $('#value-threshold').val();
-			Caman('#canvas-image-after', function () {
+			Caman('#canvas-image-after', function() {
 				this.revert(false);
 				this.threshold(threshold_value).render();
 			});
 		});
 
 		//Rotate Clockwise 90 Processing
-		$('#rotate-cw-90-btn').on('click', function (e) {
-			Caman('#canvas-image-after', function () {
+		$('#rotate-cw-90-btn').on('click', function(e) {
+			Caman('#canvas-image-after', function() {
 				this.revert(false);
 				this.rotate(90).render();
 			});
 		});
 
 		//Rotate Counter Clockwise 90 Processing
-		$('#rotate-ccw-90-btn').on('click', function (e) {
-			Caman('#canvas-image-after', function () {
+		$('#rotate-ccw-90-btn').on('click', function(e) {
+			Caman('#canvas-image-after', function() {
 				this.revert(false);
 				this.rotate(-90).render();
 			});
@@ -296,7 +298,7 @@
 			var contrast = parseInt($('#contrast').val());
 			var blur = parseInt($('#blur').val());
 			var sharpen = parseInt($('#sharpen').val());
-			Caman('#canvas-image-after', function () {
+			Caman('#canvas-image-after', function() {
 				this.revert(false);
 				this.brightness(brightness).contrast(contrast).stackBlur(blur).sharpen(sharpen).render();
 				document.getElementById('value-contrast').innerHTML = contrast;
@@ -444,7 +446,7 @@
 		return context.getImageData(0, 0, img.width, img.height);
 	}
 
-	document.getElementById('upload-file').addEventListener('change', function () {
+	document.getElementById('upload-file').addEventListener('change', function() {
 		var file = document.querySelector('#upload-file').files[0];
 		var reader = new FileReader();
 
@@ -453,7 +455,7 @@
 			reader.readAsDataURL(file);
 		}
 
-		reader.addEventListener('load', function () {
+		reader.addEventListener('load', function() {
 			img = new Image();
 			img.src = reader.result;
 			img.onload = update;
